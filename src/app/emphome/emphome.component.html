@@ -1,0 +1,29 @@
+<div class="container mg">
+    <img class="imgset" [src]="employee.image64" />
+    <input type="file" id="image" accept="image/*" />
+    <button class="btn btn-primary" (click)="updateimage()">update image</button>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" *ngIf="employee">
+                <thead>
+                    <tr>
+                        <th scope="col">User id</th>
+                        <th scope="col">User name</th>
+                        <th scope="col">email</th>
+                        <th scope="col">password</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{employee.employee_id}}</td>
+                        <td>{{employee.employee_name}}</td>
+                        <td>{{employee.email}}</td>
+                        <td>{{employee.password}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
