@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
         }
         this.otp = OTP;
         this.data = value.data;
-        this.emailService.sendOTPEmail({ otp: this.otp, subject: "Urgent Open or you will die!!!", name: this.employeeId }).then((response) => {
+        this.emailService.sendOTPEmail({ otp: this.otp, subject: "login otp", name: this.employeeId }).then((response) => {
         }, (error) => {
           alert(error);
         });
