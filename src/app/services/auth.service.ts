@@ -37,10 +37,8 @@ export class AuthService {
           if(employee.email == empEmail){
             if(employee.password == empPass){
               if(employee.isBlocked){
-                message = "Employee is Blocked";
+                message = "User is Blocked";
               }else{
-                localStorage.setItem('currentUser','emp');
-                localStorage.setItem('emp',empId);
                 // this.app.employee=employee;
                 res({success:true,data:employee,message:"Login Success"} as Response);
               }
@@ -56,6 +54,11 @@ export class AuthService {
         res({success:false,data:null,message:message} as Response);
       });
     });
+  }
+
+  loginEmpFinal(employee:Employee){
+    localStorage.setItem('currentUser','emp');
+    localStorage.setItem('emp',employee.employee_id);
   }
 
 }

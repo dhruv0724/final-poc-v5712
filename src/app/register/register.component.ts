@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmpserviceService } from '../services/empservice.service';
 import { Employee } from '../models/Employee';
-import { EmphomeComponent } from '../emphome/emphome.component';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -51,6 +50,7 @@ export class RegisterComponent implements OnInit {
     this.empservice.save(employee).then((value) => {
       if (value.success) {
         alert("Saved");
+        
 
       } else {
         alert(value.message);

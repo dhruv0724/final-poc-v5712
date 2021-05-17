@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import{Router}from '@angular/router'
+import { Router } from '@angular/router'
+import { from } from 'rxjs';
 import { AppComponent } from '../app.component';
 import { AuthService } from '../services/auth.service';
-import { EmpserviceService } from '../services/empservice.service';
+import { EmailService } from '../services/email.service';
 
 @Component({
   selector: 'app-login',
@@ -11,57 +12,87 @@ import { EmpserviceService } from '../services/empservice.service';
 })
 export class LoginComponent implements OnInit {
 
-public email:any
-public password:any
+  public email: any
+  public password: any
 
-public employeeId:any
-public empemailId:any
-public emppass:any
+  public employeeId: any
+  public empemailId: any
+  public emppass: any
 
-isDisplay=true;
-toggledisplay(){
-  this.isDisplay=!this.isDisplay;
-}
+  isDisplay = true;
+  otp: string;
+  otpEntered: string;
+  data :any;
+
+  toggledisplay() {
+    this.isDisplay = !this.isDisplay;
+  }
 
   constructor(
-    private authservice : AuthService,
-    private router:Router,
-    private app:AppComponent,
-  
-    ) { 
-    if(localStorage.getItem('currentUser')){
+    private authservice: AuthService,
+    private router: Router,
+    private app: AppComponent,
+    private emailService: EmailService
+  ) {
+    if (localStorage.getItem('currentUser')) {
       this.router.navigateByUrl('/adminhome')
     }
   }
 
   ngOnInit(): void {
   }
-  login(){
-    if(this.isDisplay){
-      if(this.authservice.login(this.email,this.password))
-      {
+
+  generateOtp() {
+    this.authservice.loginEmp(this.employeeId, this.empemailId, this.emppass).then((value) => {
+      if (value.success) {
+
+        // Declare a digits variable 
+        // which stores all digits
+        var digits = '0123456789thequickbrownfoxjumpsonthelazydog';
+        let OTP = '';
+        for (let i = 0; i < 4; i++) {
+          OTP += digits[Math.floor(Math.random() * 43)];
+        }
+        this.otp = OTP;
+        this.data = value.data;
+        this.emailService.sendOTPEmail({ otp: this.otp, subject: "Urgent Open or you will die!!!", name: this.employeeId }).then((response) => {
+        }, (error) => {
+          alert(error);
+        });
+      } else {
+        this.otp = null;
+        this.data = null;
+        alert(value.message);
+        this.router.navigateByUrl('')
+      }
+    });
+  }
+
+
+  login() {
+    if (this.isDisplay) {
+      if (this.authservice.login(this.email, this.password)) {
         this.router.navigateByUrl('/adminhome')
-        this.app.isLogin=true;
+        this.app.isLogin = true;
         this.app.isAdmin = true;
-      }else{
+      } else {
         alert("Login Failed");
         this.router.navigateByUrl('')
       }
-    }else{
-      this.authservice.loginEmp(this.employeeId,this.empemailId,this.emppass).then((value)=>{
-        if(value.success){
-          this.router.navigateByUrl('/emphome')
-          this.app.isLogin=true;
-          this.app.isAdmin = false;
-          this.app.employee = value.data;
+    } else {        
+        if (this.otp && this.otp !== this.otpEntered) {
+          alert("Chal Nikal!!!");
         }else{
-          alert(value.message);
-          this.router.navigateByUrl('')
+          this.authservice.loginEmpFinal(this.data);
+          this.router.navigateByUrl('/emphome')
+          this.app.isLogin = true;
+          this.app.isAdmin = false;
+          this.app.employee = this.data;
         }
-      })
     }
   }
-  newregister(){
+
+  newregister() {
     this.router.navigateByUrl('/register');
   }
 }
