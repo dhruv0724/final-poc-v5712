@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
       }
     } else {        
         if (this.otp && this.otp !== this.otpEntered) {
-          alert("Chal Nikal!!!");
+          alert("Wrong otp!!!");
         }else{
           this.authservice.loginEmpFinal(this.data);
           this.router.navigateByUrl('/emphome')
