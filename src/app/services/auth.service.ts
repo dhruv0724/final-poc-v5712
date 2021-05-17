@@ -37,7 +37,7 @@ export class AuthService {
           if(employee.email == empEmail){
             if(employee.password == empPass){
               if(employee.isBlocked){
-                message = "Employee is Blocked";
+                message = "User is Blocked";
               }else{
                 localStorage.setItem('currentUser','emp');
                 localStorage.setItem('emp',empId);
